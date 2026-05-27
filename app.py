@@ -33,7 +33,8 @@ if st.button("분석 시작"):
 
     # 🔥 텍스트 생성
     df["text"] = (df["title"] + " " + df["description"]).str.strip()
-
+    df["date"] = pd.to_datetime(df["publishedAt"], errors="coerce")
+    
     # 🔥 중복 제거 (추가 안전장치)
     df = df.drop_duplicates(subset=["title"])
 
