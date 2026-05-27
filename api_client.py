@@ -1,5 +1,6 @@
 import requests
 import streamlit as st
+import time
 
 GNEWS_API_KEY = st.secrets["GNEWS_API_KEY"]
 
@@ -14,6 +15,7 @@ def fetch_news(query="starbucks", lang="en", total=100):
 
     for i in range(pages):
 
+        time.sleep(1)
         params = {
             "q": query,
             "lang": lang,
