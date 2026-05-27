@@ -1,10 +1,7 @@
 import requests
-import os
-from dotenv import load_dotenv
+import streamlit as st
 
-load_dotenv()
-
-GNEWS_API_KEY = os.getenv("GNEWS_API_KEY")
+GNEWS_API_KEY = st.secrets["GNEWS_API_KEY"]
 
 
 def fetch_news(query="starbucks", lang="en", total=100):
@@ -22,15 +19,20 @@ def fetch_news(query="starbucks", lang="en", total=100):
             "lang": lang,
             "max": 10,
             "token": GNEWS_API_KEY,
-            "page": i + 1
+            "sortby": "publishedAt"
         }
 
-        res = requests.get(url, params=params)
+        res = requests.get(url, params=params, timeout=10)
 
+        # 🔥 중요: 실패 숨기지 않음
         if res.status_code != 200:
+            st.error(f"API Error: {res.status_code}")
+            st.write(res.text)
             continue
 
         data = res.json()
-        all_articles.extend(data.get("articles", []))
+        articles = data.get("articles", [])
+
+        all_articles.extend(articles)
 
     return all_articles
