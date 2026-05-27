@@ -25,7 +25,7 @@ def fetch_news(query="starbucks", lang="en", total=100):
 
     for q in queries:
         
-        sleep.time(1)
+        time.sleep(1)
         
         params = {
             "q": q,
