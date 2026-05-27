@@ -4,12 +4,6 @@ import pandas as pd
 
 def sentiment_pie(df):
 
-    colors = {
-        "POSITIVE": "#2ecc71",
-        "NEGATIVE": "#e74c3c",
-        "NEUTRAL": "#95a5a6"
-    }
-
     tmp = df["sentiment"].value_counts().reset_index()
     tmp.columns = ["sentiment", "count"]
 
@@ -17,19 +11,11 @@ def sentiment_pie(df):
         tmp,
         names="sentiment",
         values="count",
-        color="sentiment",
-        color_discrete_map=colors,
         title="감정 분포"
     )
 
 
 def sentiment_bar(df):
-
-    colors = {
-        "POSITIVE": "#2ecc71",
-        "NEGATIVE": "#e74c3c",
-        "NEUTRAL": "#95a5a6"
-    }
 
     tmp = df["sentiment"].value_counts().reset_index()
     tmp.columns = ["sentiment", "count"]
@@ -38,16 +24,11 @@ def sentiment_bar(df):
         tmp,
         x="sentiment",
         y="count",
-        color="sentiment",
-        color_discrete_map=colors,
-        title="감정 분포 (Bar)"
+        title="감정 분포"
     )
 
 
 def sentiment_timeline(df):
-
-    if "date" not in df.columns:
-        df["date"] = pd.to_datetime(df["publishedAt"], errors="coerce")
 
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
 
@@ -61,15 +42,10 @@ def sentiment_timeline(df):
         title="시간별 감정 변화"
     )
 
+
 def cluster_sentiment_bar(df):
 
     tmp = df.groupby(["cluster", "sentiment"]).size().reset_index(name="count")
-
-    colors = {
-        "POSITIVE": "#2ecc71",
-        "NEGATIVE": "#e74c3c",
-        "NEUTRAL": "#95a5a6"
-    }
 
     return px.bar(
         tmp,
@@ -77,6 +53,5 @@ def cluster_sentiment_bar(df):
         y="count",
         color="sentiment",
         barmode="group",
-        color_discrete_map=colors,
         title="클러스터별 감정 분포"
     )
