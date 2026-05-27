@@ -5,7 +5,9 @@ import time
 GNEWS_API_KEY = st.secrets["GNEWS_API_KEY"]
 
 
-def fetch_news(query="starbucks", lang="en", total=100):
+# 🔥 캐싱은 여기 붙임 (핵심)
+@st.cache_data(ttl=3600)
+def fetch_news(query="starbucks", lang="en", total=50):
 
     url = "https://gnews.io/api/v4/search"
 
@@ -15,7 +17,8 @@ def fetch_news(query="starbucks", lang="en", total=100):
 
     for i in range(pages):
 
-        time.sleep(1)
+        time.sleep(1)  # 🔥 rate limit 방지
+
         params = {
             "q": query,
             "lang": lang,
@@ -26,15 +29,13 @@ def fetch_news(query="starbucks", lang="en", total=100):
 
         res = requests.get(url, params=params, timeout=10)
 
-        # 🔥 중요: 실패 숨기지 않음
+        # 실패 출력
         if res.status_code != 200:
             st.error(f"API Error: {res.status_code}")
             st.write(res.text)
             continue
 
         data = res.json()
-        articles = data.get("articles", [])
-
-        all_articles.extend(articles)
+        all_articles.extend(data.get("articles", []))
 
     return all_articles
