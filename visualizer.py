@@ -46,6 +46,9 @@ def sentiment_bar(df):
 
 def sentiment_timeline(df):
 
+    if "date" not in df.columns:
+        df["date"] = pd.to_datetime(df["publishedAt"], errors="coerce")
+
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
 
     tmp = df.groupby(["date", "sentiment"]).size().reset_index(name="count")
@@ -57,7 +60,6 @@ def sentiment_timeline(df):
         color="sentiment",
         title="시간별 감정 변화"
     )
-
 
 def cluster_sentiment_bar(df):
 
